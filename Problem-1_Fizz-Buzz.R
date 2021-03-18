@@ -5,13 +5,11 @@ listNumbers <- 1:1000
 listMultipleThree <- seq(from = 3, to = 1000, by = 3)
 #List multiples of 5
 listMultipleFive <- seq(from = 5, to = 1000, by = 5)
-
 #List multiples of 3 that are also multiples of 5
 listIntersect <- intersect(listMultipleThree, listMultipleFive)
 
 #Remove multiples of 5 in the list of multiples of 3 
 listMultipleThree <- setdiff(listMultipleThree, listMultipleFive)
-
 #Remove multiples of 3 in the list of multiples of 5 
 listMultipleFive <- setdiff(listMultipleFive, listMultipleThree)
 
@@ -20,10 +18,8 @@ text <- c("Fizz", "Buzz", "Fizz Buzz")
 
 #Replace the multiples of 3 by Fizz
 listNumbers <- replace(listNumbers, listMultipleThree, text[1])
-
 #Replace the multiples of 5 by Buzz
 listNumbers <- replace(listNumbers, listMultipleFive, text[2])
-
 #Replace the multiples of 3 and 5 by Fizz Buzz
 listNumbers <- replace(listNumbers, listIntersect, text[3])
 
