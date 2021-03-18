@@ -1,6 +1,15 @@
+############### IMPORT LIBRARIES ###############
+
 library(blastula)
 library(ggplot2)
 
+############### DATA EMAILS RECIPIENTS ###############
+
+#Code here
+
+############### GENERATE CONTENT EMAIL ###############
+
+########## GGPLOT ##########
 
 df <- data.frame(
   gp = factor(rep(letters[1:3], each = 10)),
@@ -17,6 +26,8 @@ plot_object <-
 
 cta_button <- add_cta_button("https://nathanael-durst.com", "Visit my website !", align = "center")
 
+
+############### GENERATE EMAIL ###############
 
 email <-
   compose_email(
@@ -65,4 +76,8 @@ email <-
       )
   )
 
+############### PREVIEW EMAIL ###############
+
 if (interactive()) email
+
+############### SEND EMAIL ###############
