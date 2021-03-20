@@ -34,7 +34,7 @@ rm(listIntersect, listMultipleFive, listMultipleThree, text)
 print(listNumbers)
 
 
-# Adel's proposition
+# Adel's suggestion
 
 listNumbers1 <- 1:1000
 
