@@ -1,3 +1,5 @@
+############### [START] Nathanael's way ###############
+
 #Create the list of numbers from 1 to 1000
 listNumbers <- 1:1000
 
@@ -29,22 +31,36 @@ rm(listIntersect, listMultipleFive, listMultipleThree, text)
 #Print the results
 print(listNumbers)
 
+############### [END] Nathanael's way ###############
 
-# Adel's suggestion
+############### [START] Adel's way ###############
 
-listNumbers1 <- 1:1000
+listNumbers <- 1:1000
 
-for(i in 1:length(listNumbers1)) {
-  if (listNumbers1[i] %in% listMultipleThree && listNumbers1[i] %in% listMultipleFive){
-    listNumbers1[i]=text[3]
+#List multiples of 3
+listMultipleThree <- seq(from = 3, to = 1000, by = 3)
+#List multiples of 5
+listMultipleFive <- seq(from = 5, to = 1000, by = 5)
+
+#List of values that will replace the different multiples
+text <- c("Fizz", "Buzz", "Fizz Buzz")
+
+for(i in 1:length(listNumbers)) {
+  if (listNumbers[i] %in% listMultipleThree && listNumbers[i] %in% listMultipleFive){
+    listNumbers[i]=text[3]
   }
-  else if (listNumbers1[i] %in% listMultipleThree){
-    listNumbers1[i]=text[1]
+  else if (listNumbers[i] %in% listMultipleThree){
+    listNumbers[i]=text[1]
   }
-  else if (listNumbers1[i] %in% listMultipleFive){
-    listNumbers1[i]=text[2]
+  else if (listNumbers[i] %in% listMultipleFive){
+    listNumbers[i]=text[2]
   }
 }
 
+#Clean the environment
+rm(i, listMultipleFive, listMultipleThree, text)
+
 #Print the results
-print(listNumbers1)
+print(listNumbers)
+
+############### [END] Adel's way ###############
