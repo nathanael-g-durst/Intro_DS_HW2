@@ -32,3 +32,23 @@ rm(listIntersect, listMultipleFive, listMultipleThree, text)
 
 #Print the results
 print(listNumbers)
+
+
+# Adel's proposition
+
+listNumbers1 <- 1:1000
+
+for(i in 1:length(listNumbers1)) {
+  if (listNumbers1[i] %in% listMultipleThree && listNumbers1[i] %in% listMultipleFive){
+    listNumbers1[i]=text[3]
+  }
+  else if (listNumbers1[i] %in% listMultipleThree){
+    listNumbers1[i]=text[1]
+  }
+  else if (listNumbers1[i] %in% listMultipleFive){
+    listNumbers1[i]=text[2]
+  }
+}
+
+#Print the results
+print(listNumbers1)
