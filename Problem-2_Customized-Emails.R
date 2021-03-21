@@ -5,7 +5,12 @@ library(ggplot2)
 
 ############### DATA EMAILS RECIPIENTS ###############
 
-#Code here
+########## Test Code
+
+# rowNames <- c("firstName", "lastName", "gender", "age", "email", "address")
+# mailingList <- data.frame(row.names = rowNames)
+
+########## END Test Code
 
 ############### GENERATE CONTENT EMAIL ###############
 
@@ -81,3 +86,38 @@ email <-
 if (interactive()) email
 
 ############### SEND EMAIL ###############
+
+#Check if the keyring package is installed :
+installedPackages <- installed.packages()
+keyringPackage <- is.element("keyring", installedPackages)
+
+#Install keyring if not installed
+if(keyringPackage != TRUE){
+  install.packages("keyring")
+}
+
+#Set the password as an environmental variable
+Sys.setenv(pass = "_$wIEfL_?&55-,!N~6")
+
+##### /!\ This should not be done (security risk) /!\ #####
+######### I'm using a dummy account created for this purpose only which will be deleted afterward.
+
+#Generate credentials
+credentials <-
+  creds_envvar(
+    user = "introds@introds.durst-webmaster.fr",
+    pass_envvar = "pass",
+    host = "introds.durst-webmaster.fr",
+    port = "465",
+    use_ssl = TRUE,
+  )
+
+#Send e-mail
+
+email %>%
+  smtp_send(
+    from = "IntroDS@introds.durst-webmaster.fr",
+    to = "nathanael.durst@gmail.com",
+    subject = "Testing the `smtp_send()` function",
+    credentials = credentials,
+  )
