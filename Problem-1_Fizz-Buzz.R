@@ -68,12 +68,16 @@ print(listNumbers)
 # EL-Amine way Start 
 
 
-  for(i in 1:1000) { 
+ list = matrix(0, ncol = 5)
+  for(i in 1:1000)
+  { 
 
-      if((i%%3==0)&&(i%%5==0))   {print("Fizz Buzz")} 
-    else { if(i%%5==0) { print("Buzz")}
-     else {  if(i%%3==0) {print("Fizz") } 
-       else print(i)}} }
+    if((i%%3==0)&&(i%%5==0))   { list[i]="Fizz Buzz"} 
+    else { if(i%%5==0) {list[i]="Buzz"}
+     else {  if(i%%3==0) {list[i]="Fizz" } 
+       else list[i]=i }} 
+  }
+print(list)
 
 # [END] EL-Amine
 
