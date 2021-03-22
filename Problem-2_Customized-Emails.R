@@ -1,16 +1,28 @@
 # Requirements
 
-## Load libraries
-library("zoo")
+## Packages
 
-## Check if the keyring package is installed :
+### Check if installed, install it if not and load library
 installedPackages <- installed.packages()
-keyringPackage <- is.element("keyring", installedPackages)
 
-## Install keyring if not installed
-if(keyringPackage != TRUE){
-  install.packages("keyring")
+#### Add here the packages needed ################################
+packagesNeeded <- c("keyring", "blastula", "zoo", "xts")
+#################################################################
+
+for (packageName in packagesNeeded) {
+  packageExists <- is.element(packageName, installedPackages)
+  if(packageExists != TRUE){
+    install.packages(packageName)
+    library(packageName, character.only = TRUE)
+    print(paste(packageName, "has been installed and the library is loaded !"))
+  } else {
+    library(packageName, character.only = TRUE)
+    print(paste(packageName, "is installed and the library is loaded !"))
+  }
 }
+
+### Clean environment
+rm(installedPackages, packageName, packagesNeeded, packageExists)
 
 ## Import data
 dataClients <- read.csv("dataClients22032021.csv", header = TRUE, sep =";")
@@ -51,10 +63,34 @@ header <-
 ## Body
 
 ### Offer
-offer10 <- add_cta_button("https://nathanael-durst.com?reduction=10", "10% off from  !", align = "center")
-offer20 <- add_cta_button("https://nathanael-durst.com?reduction=20", "20% off from  !", align = "center")
-offer30 <- add_cta_button("https://nathanael-durst.com?reduction=30", "30% off from  !", align = "center")
-offer50 <- add_cta_button("https://nathanael-durst.com?reduction=50", "50% off from  !", align = "center")
+offer10 <- add_cta_button("https://nathanael-durst.com?reduction=10", "Get 10% off from your Instabot.py's installation !", align = "center")
+offer20 <- add_cta_button("https://nathanael-durst.com?reduction=20", "Get 20% off from your Instabot.py's installation !", align = "center")
+offer30 <- add_cta_button("https://nathanael-durst.com?reduction=30", "Get 30% off from your Instabot.py's installation !", align = "center")
+offer50 <- add_cta_button("https://nathanael-durst.com?reduction=50", "Get 50% off from your Instabot.py's installation !", align = "center")
+
+### Spotlight
+spotlight <-
+  block_articles(
+    article(
+      image = "https://nathanael-durst.com/documents/insta.png",
+      title = "Instabot.py",
+      content =
+        "Boost your presence on Intagram with Instagram.py! 
+        It is an extremely light instagram bot that uses the undocumented Web API.  
+        Unlike other bots, Instabot.py does not require Selenium or a WebDriver.culture, and high-tech development.
+        We can provide assistance to set up the bot and will gadly help you with your digital marketing strategy."
+    ),
+    article(
+      image = "https://nathanael-durst.com/documents/ovh.png",
+      title = "Fire at OVH",
+      content =
+        "As you may have heard, there has been a fire at one of OVH's datacenters. 
+        Millions of websites have been affected by it and some event went offline. 
+        We have been monitoring the situation and will be in touch with those affected.
+        It is good to remember that every website we create are backed up each day 
+        on distants server to avoid any data loss."
+    )
+  )
 
 ## Footer
 footer <-
@@ -80,17 +116,15 @@ for(i in dataClients$id){
   firstName <- dataClients[i, "firstName"]
   gender <- dataClients[i, "gender"]
   companyName <- dataClients[i, "companyName"]
-  email <- dataClients[i, "email"]
+  emailClient <- dataClients[i, "email"]
   
   ### Number of month since the beginning of the relationship
   clientSince <- as.Date(dataClients[i, "clientSince"])
   clientSince <- round((as.yearmon(strptime(today, format = "%Y-%m-%d"))
                         -as.yearmon(strptime(clientSince, format = "%Y-%m-%d")))*12)
-  
-  ## Client's site visitors
-  
+
   ## Generate the e-mail's content
-  
+
   ### Greetings depending on the gender and name of the client
   if (gender == "Male") {
     greetings <- paste("Dear Sir ", lastName, ",", sep = "")
@@ -100,7 +134,7 @@ for(i in dataClients$id){
     name <- paste(firstName, lastName)
     greetings <- paste("Dear ", name, ",", sep = "")
   }
-  
+
   ### Promotion percentage depending on the fidelity of the client (1/3/5 or more years)
   if (clientSince <= 12) {
     offer <- offer10
@@ -111,20 +145,37 @@ for(i in dataClients$id){
   } else {
     offer <- offer50
   }
-  
+
   ### Company name
   company <- paste(companyName, "'s", sep = "")
   websiteText <- paste("Please find below", company, "website statistics for the month of", mailMonth, ":")
+
+  ## Client's site visitors
   
+
   ### Body
   body <-
     blocks(
       block_title(md(mailSubject)),
       block_text(md(greetings)),
+      block_text(
+        "We are pleased to announce you that our latest newsletter is out ! 
+        Today we will be talking about a way to increase your Instagram's 
+        account growth and the incident that happened at OVH. 
+        As always, you will find the data regarding the number of visitors 
+        your company's website received at the end of this e-mail."
+      ),
+      block_text(md("## This month's spotlight :")),
+      spotlight,
+      block_text(md("## Thank you !")),
+      block_text("To thank you for your thrust in our company, we would like to offer you a small token of appreciation :"),
       md(offer),
       block_spacer(),
-      block_text(websiteText)
-      
+      block_text(md("## Statistics :")),
+      block_text(websiteText),
+      block_spacer(),
+      block_text("Yours sincerely,"),
+      block_text("The Team at Dürst Webmaster", align = "right")
     )
   
   ## Compose the e-mail
@@ -134,6 +185,7 @@ for(i in dataClients$id){
       body = body,
       footer = footer,
     )
+
   ##########################################################    
   ########################################################## 
   #              DO NOT REMOVE THE COMMENT                 #
@@ -155,6 +207,27 @@ for(i in dataClients$id){
   
 }
 
-############### PREVIEW EMAIL ###############
-
+# Preview of the last e-mail sent
 if (interactive()) email
+
+# Clean environment
+
+## Static
+rm(today, credentials, mailMonth, mailSubject, mailSender, offer10, offer20, offer30, offer50, spotlight)
+
+## Loop
+
+### Text
+rm(i, lastName, firstName, gender, companyName, emailClient, clientSince, greetings, name, offer, company, websiteText, body, email, header, footer)
+
+### Stats
+#rm()
+
+# ## Send test e-mail to nathanael.durst@gmail.com
+# email %>%
+#   smtp_send(
+#     from = mailSender,
+#     to = emailClient,
+#     subject = mailSubject,
+#     credentials = credentials,
+#   )
