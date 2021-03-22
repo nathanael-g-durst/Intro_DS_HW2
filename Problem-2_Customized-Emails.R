@@ -5,9 +5,9 @@
 ### Check if installed, install it if not and load library
 installedPackages <- installed.packages()
 
-#### Add here the packages needed ################################
-packagesNeeded <- c("keyring", "blastula", "zoo", "xts")
-#################################################################
+#### Add here the packages needed #################################################
+packagesNeeded <- c("keyring", "blastula", "zoo", "xts", "lubridate", "ggplot2")
+###################################################################################
 
 for (packageName in packagesNeeded) {
   packageExists <- is.element(packageName, installedPackages)
@@ -29,7 +29,9 @@ dataClients <- read.csv("dataClients22032021.csv", header = TRUE, sep =";")
 dataVisits <- read.csv("dataVisits22032021.csv", header = TRUE, sep =";")
 
 ## Date of today
-today <- Sys.Date()
+##### Edit for it to work no mater the day it's executed (lack of data)
+# today <- Sys.Date()
+today <- "2021-03-22"
 
 ## Set the password as an environmental variable
 Sys.setenv(pass = "_$wIEfL_?&55-,!N~6")
@@ -51,7 +53,7 @@ credentials <-
 ## Generate the e-mail's header
 Sys.setlocale("LC_ALL", "English")
 mailMonth <- format(Sys.Date(), "%B")
-mailSubject <- paste("Dürst Webmaster's ", mailMonth, " Newsletter")
+mailSubject <- paste("Durst Webmaster's ", mailMonth, " Newsletter")
 mailSender <- c("Adel Ben Snoussi - El-Amine Maamar - Nathanaël Dürst" = "introds@introds.durst-webmaster.fr")
 
 ## Header
@@ -92,6 +94,25 @@ spotlight <-
     )
   )
 
+### Stats
+
+#### Data row selection
+##### Edit for it to work no mater the day it's executed  (lack of data)
+# currentMonth <- month(today)
+# currentDay <- day(today)
+currentMonth <- 3
+currentDay <- 22
+
+rowsMonth <- currentMonth+1
+rowsDayS <- rowsMonth+1
+rowsDayE <- currentDay+rowsMonth
+
+monthList <- month.name
+dayList <- 1:currentDay
+
+#### Plot
+titlePlot <- paste("Plot of your company's website number of daily visitors in", mailMonth)
+
 ## Footer
 footer <-
   blocks(
@@ -127,12 +148,12 @@ for(i in dataClients$id){
 
   ### Greetings depending on the gender and name of the client
   if (gender == "Male") {
-    greetings <- paste("Dear Sir ", lastName, ",", sep = "")
-  } else if (gender == "Female") {
-    greetings <- paste("Dear Madam ", lastName, ",", sep = "")
+    greetings <- paste("**Dear Sir ", lastName, ",**", sep = "")
+  } else if (gender == "**Female") {
+    greetings <- paste("Dear Madam ", lastName, ",**", sep = "")
   } else {
     name <- paste(firstName, lastName)
-    greetings <- paste("Dear ", name, ",", sep = "")
+    greetings <- paste("**Dear ", name, ",**", sep = "")
   }
 
   ### Promotion percentage depending on the fidelity of the client (1/3/5 or more years)
@@ -148,10 +169,30 @@ for(i in dataClients$id){
 
   ### Company name
   company <- paste(companyName, "'s", sep = "")
-  websiteText <- paste("Please find below", company, "website statistics for the month of", mailMonth, ":")
+  ##### Edit for it to work no mater the day it's executed  (lack of data)
+  # date_time <- add_readable_time()
+  date_time <- "Monday, March 22, 2021 at 6:57 PM (CET)"
+  websiteStatMonth <- paste("Here's a graph of the number of visitors ", company, "website received during the month of", mailMonth, "up to today :", date_time)
 
   ## Client's site visitors
   
+  ### Get data
+  monthlyVisitors <- as.vector(dataVisits[i,2:rowsMonth], mode ="integer")
+  dailyVisitors <- as.vector(dataVisits[i,rowsDayS:rowsDayE], mode ="integer")
+  dailyDataFrame <- data.frame("Days of the month" = dayList, "Number of visitors" = dailyVisitors)
+  mean <- round(mean(dailyVisitors))
+  meanDaily <- rep(mean, currentDay)
+  meanDaily <- data.frame("Days of the month" = dayList, "Mean" = meanDaily)
+  subtitle <- paste("Your website is getting traction with a daily average of", mean, "visitors.")
+  
+  ### Plot
+  dailyPlot <- ggplot(data = dailyDataFrame, aes(x = Days.of.the.month, y = Number.of.visitors, group = 1))+ 
+    geom_line(linetype = "dashed", color = "steelblue")+
+    geom_point(color = "black")+
+    geom_line(data=meanDaily,  mapping=aes(x = Days.of.the.month, y = Mean), col="red")+
+    labs(title = "Your website's number of visitors daily", subtitle = subtitle)+
+    xlab("Days of the month")+
+    ylab("Number of visitors")
 
   ### Body
   body <-
@@ -172,10 +213,16 @@ for(i in dataClients$id){
       md(offer),
       block_spacer(),
       block_text(md("## Statistics :")),
-      block_text(websiteText),
+      block_text(websiteStatMonth),
+      add_ggplot(
+        dailyPlot,
+        width = 6, height = 4,
+        alt = titlePlot,
+        align = "center",
+      ),
       block_spacer(),
-      block_text("Yours sincerely,"),
-      block_text("The Team at Dürst Webmaster", align = "right")
+      block_text(md("**Yours sincerely,**")),
+      block_text(md("<p style='text-align: right; font-weight: bold;'>The Team at Durst Webmaster</p>"))
     )
   
   ## Compose the e-mail
@@ -210,6 +257,15 @@ for(i in dataClients$id){
 # Preview of the last e-mail sent
 if (interactive()) email
 
+# ## Send test e-mail to nathanael.duerst@etu.unige.ch
+# email %>%
+#   smtp_send(
+#     from = mailSender,
+#     to = emailClient,
+#     subject = mailSubject,
+#     credentials = credentials,
+#   )
+
 # Clean environment
 
 ## Static
@@ -218,16 +274,9 @@ rm(today, credentials, mailMonth, mailSubject, mailSender, offer10, offer20, off
 ## Loop
 
 ### Text
-rm(i, lastName, firstName, gender, companyName, emailClient, clientSince, greetings, name, offer, company, websiteText, body, email, header, footer)
+rm(i, lastName, firstName, gender, companyName, emailClient, clientSince, greetings, name, offer,
+   company, websiteStatMonth, body, email, header, footer)
 
-### Stats
-#rm()
-
-# ## Send test e-mail to nathanael.durst@gmail.com
-# email %>%
-#   smtp_send(
-#     from = mailSender,
-#     to = emailClient,
-#     subject = mailSubject,
-#     credentials = credentials,
-#   )
+## Stats
+rm(currentDay, currentMonth, dailyVisitors, date_time, dayList, mean, monthList, monthlyVisitors, rowsDayS,
+   rowsDayE, rowsMonth, subtitle, titlePlot, dailyDataFrame, dailyPlot, meanDaily)
