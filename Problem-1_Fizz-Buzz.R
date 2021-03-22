@@ -65,20 +65,26 @@ print(listNumbers)
 
 ########## [END] Adel's way ###############
 
-# EL-Amine way Start 
+########## [Start] El-Amine's way ###############
 
+list = matrix(0, ncol = 5)
 
- list = matrix(0, ncol = 5)
-  for(i in 1:1000)
-  { 
+for(i in 1:1000){ 
+    if((i%%3==0)&&(i%%5==0)){
+      list[i]="Fizz Buzz"
+    } else {
+        if(i%%5==0){
+          list[i]="Buzz"
+        } else {
+            if(i%%3==0) {
+              list[i]="Fizz"
+            } else {
+                list[i]=i
+              }
+          }
+      }
+}
 
-    if((i%%3==0)&&(i%%5==0))   { list[i]="Fizz Buzz"} 
-    else { if(i%%5==0) {list[i]="Buzz"}
-     else {  if(i%%3==0) {list[i]="Fizz" } 
-       else list[i]=i }} 
-  }
 print(list)
 
-# [END] EL-Amine
-
-
+########## [END] El-Amine's way ###############
