@@ -1,3 +1,13 @@
+###########################################################################
+#####                                                                 #####
+#####   Check out the 94 other emails sent by :                       #####
+#####                                                                 #####
+#####   1) Visiting :         https://webmail.durst-webmaster.fr/     #####
+#####   2) Adresse e-mail :   results@introds.durst-webmaster.fr      #####
+#####   3) Mot de passe :     ^q5bxQQ[mw_2Wg!Twn                      #####
+#####                                                                 #####
+###########################################################################
+
 # Requirements
 
 ## Packages
@@ -149,8 +159,8 @@ for(i in dataClients$id){
   ### Greetings depending on the gender and name of the client
   if (gender == "Male") {
     greetings <- paste("**Dear Sir ", lastName, ",**", sep = "")
-  } else if (gender == "**Female") {
-    greetings <- paste("Dear Madam ", lastName, ",**", sep = "")
+  } else if (gender == "Female") {
+    greetings <- paste("**Dear Madam ", lastName, ",**", sep = "")
   } else {
     name <- paste(firstName, lastName)
     greetings <- paste("**Dear ", name, ",**", sep = "")
@@ -238,11 +248,11 @@ for(i in dataClients$id){
   #              DO NOT REMOVE THE COMMENT                 #
   ##########################################################    
   ##########################################################  
-  # ## Send the e-mail
+  ## Send the e-mail
   # email %>%
   #   smtp_send(
   #     from = mailSender,
-  #     to = email,
+  #     to = emailClient,
   #     subject = mailSubject,
   #     credentials = credentials,
   #   )
