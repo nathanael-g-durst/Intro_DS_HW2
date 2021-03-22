@@ -63,4 +63,18 @@ rm(i, listMultipleFive, listMultipleThree, text)
 #Print the results
 print(listNumbers)
 
-############### [END] Adel's way ###############
+########## [END] Adel's way ###############
+
+# EL-Amine way Start 
+
+
+  for(i in 1:1000) { 
+
+      if((i%%3==0)&&(i%%5==0))   {print("Fizz Buzz")} 
+    else { if(i%%5==0) { print("Buzz")}
+     else {  if(i%%3==0) {print("Fizz") } 
+       else print(i)}} }
+
+# [END] EL-Amine
+
+
