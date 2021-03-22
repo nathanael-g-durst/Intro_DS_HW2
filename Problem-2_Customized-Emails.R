@@ -34,7 +34,7 @@ credentials <-
     use_ssl = TRUE,
   )
 
-# Static parts of the e-maik
+# Static parts of the e-mail
 
 ## Generate the e-mail's header
 Sys.setlocale("LC_ALL", "English")
@@ -47,6 +47,14 @@ header <-
   blocks(
     add_image("https://nathanael-durst.com/documents/Logo%20800x800%20-%20Dark.png", alt = "Dürst Webmaster's Logo", width = 400, align = "center"),
   )
+
+## Body
+
+### Offer
+offer10 <- add_cta_button("https://nathanael-durst.com?reduction=10", "10% off from  !", align = "center")
+offer20 <- add_cta_button("https://nathanael-durst.com?reduction=20", "20% off from  !", align = "center")
+offer30 <- add_cta_button("https://nathanael-durst.com?reduction=30", "30% off from  !", align = "center")
+offer50 <- add_cta_button("https://nathanael-durst.com?reduction=50", "50% off from  !", align = "center")
 
 ## Footer
 footer <-
@@ -95,21 +103,27 @@ for(i in dataClients$id){
   
   ### Promotion percentage depending on the fidelity of the client (1/3/5 or more years)
   if (clientSince <= 12) {
-    offer <- paste("Dear Sir ", lastName, ",", sep = "")
+    offer <- offer10
   } else if (clientSince <= 36) {
-    offer <- paste("Dear Madam ", lastName, ",", sep = "")
+    offer <- offer20
   } else if (clientSince <= 60) {
-    offer <- paste("Dear Madam ", lastName, ",", sep = "")
+    offer <- offer30
   } else {
-    name <- paste(firstName, lastName)
-    offer <- paste("Dear ", name, ",", sep = "")
+    offer <- offer50
   }
+  
+  ### Company name
+  company <- paste(companyName, "'s", sep = "")
+  websiteText <- paste("Please find below", company, "website statistics for the month of", mailMonth, ":")
   
   ### Body
   body <-
     blocks(
       block_title(md(mailSubject)),
       block_text(md(greetings)),
+      md(offer),
+      block_spacer(),
+      block_text(websiteText)
       
     )
   
