@@ -35,8 +35,8 @@ for (packageName in packagesNeeded) {
 rm(installedPackages, packageName, packagesNeeded, packageExists)
 
 ## Import data
-dataClients <- read.csv("dataClients22032021.csv", header = TRUE, sep =";")
-dataVisits <- read.csv("dataVisits.csv", header = TRUE, sep =";")
+dataClients <- read.csv("dataClients22032021.csv", header = TRUE, sep =",")
+dataVisits <- read.csv("dataVisits.csv", header = TRUE, sep =",")
 
 ## Date of today
 today <- Sys.Date()
