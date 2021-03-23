@@ -39,9 +39,7 @@ dataClients <- read.csv("dataClients22032021.csv", header = TRUE, sep =";")
 dataVisits <- read.csv("dataVisits22032021.csv", header = TRUE, sep =";")
 
 ## Date of today
-##### Edit for it to work no mater the day it's executed (lack of data)
-# today <- Sys.Date()
-today <- "2021-03-22"
+today <- Sys.Date()
 
 ## Set the password as an environmental variable
 Sys.setenv(pass = "_$wIEfL_?&55-,!N~6")
@@ -182,7 +180,8 @@ for(i in dataClients$id){
   ##### Edit for it to work no mater the day it's executed  (lack of data)
   # date_time <- add_readable_time()
   date_time <- "Monday, March 22, 2021 at 6:57 PM (CET)"
-  websiteStatMonth <- paste("Here's a graph of the number of visitors ", company, "website received during the month of", mailMonth, "up to today :", date_time)
+  mailMonth <- "March"
+  websiteStatMonth <- paste("Here's a graph of the number of visitors ", company, "website received during the month of", mailMonth, "up to :", date_time)
 
   ## Client's site visitors
   
@@ -268,13 +267,13 @@ for(i in dataClients$id){
 if (interactive()) email
 
 # ## Send test e-mail to nathanael.duerst@etu.unige.ch
-# email %>%
-#   smtp_send(
-#     from = mailSender,
-#     to = emailClient,
-#     subject = mailSubject,
-#     credentials = credentials,
-#   )
+email %>%
+  smtp_send(
+    from = mailSender,
+    to = emailClient,
+    subject = mailSubject,
+    credentials = credentials,
+  )
 
 # Clean environment
 
