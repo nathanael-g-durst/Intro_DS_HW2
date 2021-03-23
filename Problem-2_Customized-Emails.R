@@ -1,6 +1,6 @@
 ###########################################################################
 #####                                                                 #####
-#####   Check out the 94 other emails sent by :                       #####
+#####   Check out the 90 other emails sent by :                       #####
 #####                                                                 #####
 #####   1) Visiting :         https://webmail.durst-webmaster.fr/     #####
 #####   2) Adresse e-mail :   results@introds.durst-webmaster.fr      #####
@@ -36,7 +36,7 @@ rm(installedPackages, packageName, packagesNeeded, packageExists)
 
 ## Import data
 dataClients <- read.csv("dataClients22032021.csv", header = TRUE, sep =";")
-dataVisits <- read.csv("dataVisits22032021.csv", header = TRUE, sep =";")
+dataVisits <- read.csv("dataVisits.csv", header = TRUE, sep =";")
 
 ## Date of today
 today <- Sys.Date()
@@ -105,17 +105,9 @@ spotlight <-
 ### Stats
 
 #### Data row selection
-##### Edit for it to work no mater the day it's executed  (lack of data)
-# currentMonth <- month(today)
-# currentDay <- day(today)
-currentMonth <- 3
-currentDay <- 22
-
-rowsMonth <- currentMonth+1
-rowsDayS <- rowsMonth+1
-rowsDayE <- currentDay+rowsMonth
-
-monthList <- month.name
+currentDay <- day(today)
+rowsDayS <- 2
+rowsDayE <- currentDay+1
 dayList <- 1:currentDay
 
 #### Plot
@@ -177,22 +169,19 @@ for(i in dataClients$id){
 
   ### Company name
   company <- paste(companyName, "'s", sep = "")
-  ##### Edit for it to work no mater the day it's executed  (lack of data)
-  # date_time <- add_readable_time()
-  date_time <- "Monday, March 22, 2021 at 6:57 PM (CET)"
   mailMonth <- "March"
-  websiteStatMonth <- paste("Here's a graph of the number of visitors ", company, "website received during the month of", mailMonth, "up to :", date_time)
+  websiteStatMonth <- paste("Here's a graph of the number of visitors ", company, "website received during the month of", mailMonth, "up to today.")
 
   ## Client's site visitors
   
   ### Get data
-  monthlyVisitors <- as.vector(dataVisits[i,2:rowsMonth], mode ="integer")
   dailyVisitors <- as.vector(dataVisits[i,rowsDayS:rowsDayE], mode ="integer")
   dailyDataFrame <- data.frame("Days of the month" = dayList, "Number of visitors" = dailyVisitors)
+  totalVisitors <- sum(dailyVisitors)
   mean <- round(mean(dailyVisitors))
   meanDaily <- rep(mean, currentDay)
   meanDaily <- data.frame("Days of the month" = dayList, "Mean" = meanDaily)
-  subtitle <- paste("Your website is getting traction with a daily average of", mean, "visitors.")
+  subtitle <- paste("Daily average of", mean, "visitors and a total of", totalVisitors, "visitors so far.")
   
   ### Plot
   dailyPlot <- ggplot(data = dailyDataFrame, aes(x = Days.of.the.month, y = Number.of.visitors, group = 1))+ 
@@ -201,7 +190,8 @@ for(i in dataClients$id){
     geom_line(data=meanDaily,  mapping=aes(x = Days.of.the.month, y = Mean), col="red")+
     labs(title = "Your website's number of visitors daily", subtitle = subtitle)+
     xlab("Days of the month")+
-    ylab("Number of visitors")
+    ylab("Number of visitors")+
+    scale_x_continuous(breaks = dayList)
 
   ### Body
   body <-
@@ -218,7 +208,7 @@ for(i in dataClients$id){
       block_text(md("## This month's spotlight :")),
       spotlight,
       block_text(md("## Thank you !")),
-      block_text("To thank you for your thrust in our company, we would like to offer you a small token of appreciation :"),
+      block_text("To thank you for your thrust, we would like to offer you a small token of appreciation :"),
       md(offer),
       block_spacer(),
       block_text(md("## Statistics :")),
@@ -287,5 +277,5 @@ rm(i, lastName, firstName, gender, companyName, emailClient, clientSince, greeti
    company, websiteStatMonth, body, email, header, footer)
 
 ## Stats
-rm(currentDay, currentMonth, dailyVisitors, date_time, dayList, mean, monthList, monthlyVisitors, rowsDayS,
-   rowsDayE, rowsMonth, subtitle, titlePlot, dailyDataFrame, dailyPlot, meanDaily)
+rm(currentDay, dailyVisitors, totalVisitors, dayList, mean, rowsDayS,
+   rowsDayE, subtitle, titlePlot, dailyDataFrame, dailyPlot, meanDaily)
