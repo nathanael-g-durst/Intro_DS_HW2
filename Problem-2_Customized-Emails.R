@@ -267,13 +267,13 @@ for(i in dataClients$id){
 if (interactive()) email
 
 # ## Send test e-mail to nathanael.duerst@etu.unige.ch
-email %>%
-  smtp_send(
-    from = mailSender,
-    to = emailClient,
-    subject = mailSubject,
-    credentials = credentials,
-  )
+# email %>%
+#   smtp_send(
+#     from = mailSender,
+#     to = emailClient,
+#     subject = mailSubject,
+#     credentials = credentials,
+#   )
 
 # Clean environment
 
