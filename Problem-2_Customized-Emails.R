@@ -1,12 +1,15 @@
-###########################################################################
-#####                                                                 #####
-#####   Check out the 90 other emails sent by :                       #####
-#####                                                                 #####
-#####   1) Visiting :         https://webmail.durst-webmaster.fr/     #####
-#####   2) Adresse e-mail :   results@introds.durst-webmaster.fr      #####
-#####   3) Mot de passe :     ^q5bxQQ[mw_2Wg!Twn                      #####
-#####                                                                 #####
-###########################################################################
+#################################################################################################
+#####                                                                                       #####
+#####   Check out the 90 other emails sent by :                                             #####
+#####                                                                                       #####
+#####   1) Visiting :         https://webmail.durst-webmaster.fr/                           #####
+#####   2) Adresse e-mail :   results@introds.durst-webmaster.fr                            #####
+#####   3) Mot de passe :     ^q5bxQQ[mw_2Wg!Twn                                            #####
+#####                                                                                       #####
+#####   In case of SSL_ERROR_BAD_CERT_DOMAIN, it's just me being bad with SSL certificates. #####
+#####   It's hopefully fixed by the time you're reading this.                               #####
+#####                                                                                       #####
+#################################################################################################
 
 # Requirements
 
@@ -110,9 +113,6 @@ rowsDayS <- 2
 rowsDayE <- currentDay+1
 dayList <- 1:currentDay
 
-#### Plot
-titlePlot <- paste("Plot of your company's website number of daily visitors in", mailMonth)
-
 ## Footer
 footer <-
   blocks(
@@ -170,7 +170,7 @@ for(i in dataClients$id){
   ### Company name
   company <- paste(companyName, "'s", sep = "")
   mailMonth <- "March"
-  websiteStatMonth <- paste("Here's a graph of the number of visitors ", company, "website received during the month of", mailMonth, "up to today.")
+  websiteStatMonth <- paste("Here's a graph representing the number of visitors your company's website received during the month of", mailMonth, "up to today.")
 
   ## Client's site visitors
   
@@ -181,14 +181,15 @@ for(i in dataClients$id){
   mean <- round(mean(dailyVisitors))
   meanDaily <- rep(mean, currentDay)
   meanDaily <- data.frame("Days of the month" = dayList, "Mean" = meanDaily)
-  subtitle <- paste("Daily average of", mean, "visitors and a total of", totalVisitors, "visitors so far.")
+  titlePlot <- paste(company, "number of visitors daily in", mailMonth)
+  subtitlePlot <- paste("Daily average of", mean, "visitors and a total of", totalVisitors, "visitors so far.")
   
   ### Plot
   dailyPlot <- ggplot(data = dailyDataFrame, aes(x = Days.of.the.month, y = Number.of.visitors, group = 1))+ 
     geom_line(linetype = "dashed", color = "steelblue")+
     geom_point(color = "black")+
     geom_line(data=meanDaily,  mapping=aes(x = Days.of.the.month, y = Mean), col="red")+
-    labs(title = "Your website's number of visitors daily", subtitle = subtitle)+
+    labs(title = titlePlot, subtitle = subtitlePlot)+
     xlab("Days of the month")+
     ylab("Number of visitors")+
     scale_x_continuous(breaks = dayList)
@@ -208,11 +209,12 @@ for(i in dataClients$id){
       block_text(md("## This month's spotlight :")),
       spotlight,
       block_text(md("## Thank you !")),
-      block_text("To thank you for your thrust, we would like to offer you a small token of appreciation :"),
+      block_text("To thank you for your trust, we would like to offer you a small token of appreciation :"),
       md(offer),
       block_spacer(),
       block_text(md("## Statistics :")),
       block_text(websiteStatMonth),
+      block_spacer(),
       add_ggplot(
         dailyPlot,
         width = 6, height = 4,
@@ -237,7 +239,7 @@ for(i in dataClients$id){
   #              DO NOT REMOVE THE COMMENT                 #
   ##########################################################    
   ##########################################################  
-  ## Send the e-mail
+  # # Send the e-mail
   # email %>%
   #   smtp_send(
   #     from = mailSender,
@@ -250,17 +252,17 @@ for(i in dataClients$id){
   #              DO NOT REMOVE THE COMMENT                 #
   ##########################################################    
   ##########################################################
-  
+
 }
 
 # Preview of the last e-mail sent
 if (interactive()) email
 
-# ## Send test e-mail to nathanael.duerst@etu.unige.ch
+## Replace "xxx@xxx.com" with an email address and uncomment the following section to send a test e-mail
 # email %>%
 #   smtp_send(
 #     from = mailSender,
-#     to = emailClient,
+#     to = "nathanael.duerst@etu.unige.ch",
 #     subject = mailSubject,
 #     credentials = credentials,
 #   )
@@ -278,4 +280,4 @@ rm(i, lastName, firstName, gender, companyName, emailClient, clientSince, greeti
 
 ## Stats
 rm(currentDay, dailyVisitors, totalVisitors, dayList, mean, rowsDayS,
-   rowsDayE, subtitle, titlePlot, dailyDataFrame, dailyPlot, meanDaily)
+   rowsDayE, titlePlot, subtitlePlot, dailyDataFrame, dailyPlot, meanDaily)
