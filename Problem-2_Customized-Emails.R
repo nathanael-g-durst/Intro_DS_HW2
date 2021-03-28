@@ -220,7 +220,7 @@ for(i in dataClients$id){
         align = "center",
       ),
       includeHTML("./poll.html"),
-      block_text("*If you are facing some problems participating to the poll, please click on the purple question. You're feedback is highly appreciated."),
+      block_text("*If you are facing some problems participating to the poll, please click on the purple question. Your feedback is highly appreciated."),
       block_text(md("**Yours sincerely,**")),
       block_text(md("<p style='text-align: right; font-weight: bold;'>The Team at Durst Webmaster</p>"))
     )
