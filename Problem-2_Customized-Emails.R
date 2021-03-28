@@ -62,12 +62,12 @@ credentials <-
 Sys.setlocale("LC_ALL", "English")
 mailMonth <- format(Sys.Date(), "%B")
 mailSubject <- paste("Durst Webmaster's ", mailMonth, " Newsletter")
-mailSender <- c("Adel Ben Snoussi - El-Amine Maamar - Nathanaël Dürst" = "introds@introds.durst-webmaster.fr")
+mailSender <- c("Adel Ben Snoussi - El-Amine Maamar - Nathana?l D?rst" = "introds@introds.durst-webmaster.fr")
 
 ## Header
 header <- 
   blocks(
-    add_image("https://nathanael-durst.com/documents/Logo%20800x800%20-%20Dark.png", alt = "Dürst Webmaster's Logo", width = 400, align = "center"),
+    add_image("https://nathanael-durst.com/documents/Logo%20800x800%20-%20Dark.png", alt = "D?rst Webmaster's Logo", width = 400, align = "center"),
   )
 
 ## Body
@@ -219,7 +219,8 @@ for(i in dataClients$id){
         alt = titlePlot,
         align = "center",
       ),
-      block_spacer(),
+      includeHTML("./poll.html"),
+      block_text("*If you are facing some problems participating to the poll, please click on the purple question. You're feedback is highly appreciated."),
       block_text(md("**Yours sincerely,**")),
       block_text(md("<p style='text-align: right; font-weight: bold;'>The Team at Durst Webmaster</p>"))
     )
@@ -279,3 +280,4 @@ rm(i, lastName, firstName, gender, companyName, emailClient, clientSince, greeti
 ## Stats
 rm(currentDay, dailyVisitors, totalVisitors, dayList, mean, rowsDayS,
    rowsDayE, subtitle, titlePlot, dailyDataFrame, dailyPlot, meanDaily)
+
