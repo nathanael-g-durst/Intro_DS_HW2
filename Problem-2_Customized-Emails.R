@@ -6,6 +6,8 @@
 #####   2) Adresse e-mail :   results@introds.durst-webmaster.fr                            #####
 #####   3) Mot de passe :     ^q5bxQQ[mw_2Wg!Twn                                            #####
 #####                                                                                       #####
+#####   To see the results of the survey : https://introds.durst-webmaster.fr/              #####
+#####                                                                                       #####
 #####   In case of SSL_ERROR_BAD_CERT_DOMAIN, it's just me being bad with SSL certificates. #####
 #####   It's hopefully fixed by the time you're reading this.                               #####
 #####                                                                                       #####
