@@ -1,15 +1,6 @@
 #################################################################################################
 #####                                                                                       #####
-#####   Check out the 90 other emails sent by :                                             #####
-#####                                                                                       #####
-#####   1) Visiting :         https://webmail.durst-webmaster.fr/                           #####
-#####   2) Adresse e-mail :   results@introds.durst-webmaster.fr                            #####
-#####   3) Mot de passe :     ^q5bxQQ[mw_2Wg!Twn                                            #####
-#####                                                                                       #####
-#####   To see the results of the survey : https://introds.durst-webmaster.fr/              #####
-#####                                                                                       #####
-#####   In case of SSL_ERROR_BAD_CERT_DOMAIN, it's just me being bad with SSL certificates. #####
-#####   It's hopefully fixed by the time you're reading this.                               #####
+#####   To see the results of the survey : http://introds.durst-webmaster.fr/               #####
 #####                                                                                       #####
 #################################################################################################
 
@@ -22,7 +13,7 @@ installedPackages <- installed.packages()
 
 #### Add here the packages needed #################################################
 packagesNeeded <- c("keyring", "blastula", "zoo", "xts", "lubridate",
-                    "ggplot2", "shiny")
+                    "ggplot2")
 ###################################################################################
 
 for (packageName in packagesNeeded) {
@@ -41,11 +32,27 @@ for (packageName in packagesNeeded) {
 rm(installedPackages, packageName, packagesNeeded, packageExists)
 
 ## Import data
-dataClients <- read.csv("dataClients22032021.csv", header = TRUE, sep =",")
+dataClients <- read.csv("dataClients.csv", header = TRUE, sep =",")
 dataVisits <- read.csv("dataVisits.csv", header = TRUE, sep =",")
 
 ## Date of today
 today <- Sys.Date()
+
+## Check to make sure that the user want to send the newsletter
+checkFunction <- function() {
+  user_input <- readline("This code is meant to be run at the end of a month, are you sure that you want to continue? (y/n)")
+  if(user_input == 'y') {
+    print("Alright, let's do this!")
+    Sys.sleep(5)
+  } else {
+    stop("Exiting since you did not press y")
+  }
+}
+
+## Ask user's confirmation if too close from the beginning of the month (the plot will look weird without enough data point)
+if (day(today) < 10) {
+  checkFunction()
+}
 
 ## Set the password as an environmental variable
 Sys.setenv(pass = "_$wIEfL_?&55-,!N~6")
@@ -295,12 +302,13 @@ for(i in dataClients$id){
   ##########################################################    
   ##########################################################
 
+  ## Show the progress that have been made so far
   print(i)
 
-}
+  # Preview of the e-mail sent (remove current viewer item to access the previous one)
+  print(email)
 
-# Preview of the last e-mail sent
-if (interactive()) email
+}
 
 ## Replace "xxx@xxx.com" with an email address and un-comment the following section to send a test e-mail
 # email %>%
@@ -321,6 +329,7 @@ rm(today, credentials, mailMonth, mailSubject, mailSender, offer10, offer20, off
 ### Text
 rm(i, lastName, firstName, gender, companyName, emailClient, clientSince, greetings, name, offer,
    company, websiteStatMonth, body, email, header, survey, footer)
+########### Warning message might appear if no clients with gender "Other"
 
 ## Stats
 rm(currentDay, dailyVisitors, totalVisitors, dayList, mean, rowsDayS,
