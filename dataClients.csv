@@ -1,0 +1,11 @@
+id,lastName,firstName,gender,clientSince,companyName,email
+1,Dürst,Valérie,Female,2016-10-14,Dürst Holding LLC,valerie.durst@k-net.fr
+2,Dekoninck-Bruhin,Ivan,Male,2016-10-14,DDB Consulting LLC,ivandekbru@gmail.com
+3,Devaud,Candice,Female,2016-06-07,Bar La Plage SA,candicexdevaud@gmail.com
+4,Tonini,Mathias,Male,2015-02-13,Gland Plombier SA,mathias.tonini@gmail.com
+5,Zhang,Yuming,Female,2021-02-14,University of Geneva,yuming.zhang@unige.ch
+6,Voirol,Lionel,Male,2019-01-29,Data Analytics Lab,lionel.voirol@unige.ch
+7,Guerrier,Stéphane,Male,2009-07-16,SMAC Group,stephane.guerrier@unige.ch
+8,Maamar,El-Amine,Male,2016-09-10,Dis Parturient Corp.,el-amine.maamar@etu.unige.ch
+9,Snoussi,Adel,Male,2010-04-29,Non Justo LLP,adel.ben-snoussi@etu.unige.ch
+10,Dürst,Nathanaël,Male,2009-11-25,Dürst Webmaster,nathanael.duerst@etu.unige.ch
