@@ -1,0 +1,245 @@
+---
+title: "Homework 2: Solution"
+output: html_document
+---
+
+# Problem 1: Fizz Buzz
+
+```{r}
+out = c()
+for (x in 1:1000) {
+ if (x %% 3 == 0 & x %% 5 == 0) {
+   out = c(out, "Fizz Buzz")
+ }else if (x %% 3 == 0) {
+    out = c(out, "Fizz") 
+ }else if (x %% 5 == 0) {
+    out = c(out, "Buzz")
+ }else{
+   out = c(out, x)
+ }
+}
+
+# have a look at the first 20 elements
+out[1:20]
+```
+
+
+# Problem 2: Customized Emails
+
+### Package and software installation
+
+```{r, eval = F}
+## R install
+# install.packages("blastula")
+# install.packages("sodium")
+# install.packages("keyring")
+
+# system install on Linux
+# sudo apt-get install libsodium-dev
+# sudo apt-get install -y libsecret-1-dev
+```
+
+### Loading required libraries
+
+```{r}
+# load libraries
+library(blastula)
+library(keyring)
+library(ggplot2)
+library(glue)
+```
+
+### Creating a fake database of customer's data
+
+```{r}
+df_client <- data.frame(
+  client_id = c(1, 2, 3),
+  sex = c("man", "woman", "man"),
+  student = c(1, 1, 0),
+  first_name = c("Lionel", "Yuming", "Stéphane"),
+  last_name = c("Voirol", "Zhang", "Guerrier"),
+  dob = c("20/07/1995", "15/08/1995", "10/12/1983"),
+  date_since_client = c("01/01/2021", "30/10/2020", "01/01/2019"),
+  email_adress = c("lionel.voirol@unige.ch", "yuming.zhang@unige.ch", "stephane.guerrier@unige.ch")
+)
+# compute number of days per client
+df_client$nbr_days_since_client <- difftime(Sys.Date(), as.Date(df_client[, "date_since_client"], format = "%d/%m/%Y"))
+
+# check data
+knitr::kable(head(df_client))
+
+# create data of usage
+lst_usage <- list()
+
+# fill up list
+lambda_val <- c(5, 15, 30)
+set.seed(123)
+for (client_i in seq(dim(df_client)[1])) {
+  lst_usage[[client_i]] <- rpois(n = df_client[client_i, "nbr_days_since_client"], lambda = lambda_val[client_i])
+}
+
+str(lst_usage)
+```
+
+### Creating a personalized email 
+
+(We present here the solution to generate and send an email to a single client, to automate this process and send multiple emails, one can simply consider using this script inside of a `for` loop)
+
+```{r}
+# define a given client_id_i (this would compose your iterator in a for loop to send to all client)
+client_id_i = 1
+
+# compose email elements
+
+# html button widget
+cta_button <-
+  add_cta_button(
+    url = "https://fiber.salt.ch/fr",
+    text = "Access your account"
+  )
+
+img_path <- "salt_logo.png"
+brand_img <- add_image(file = img_path, width = 200)
+
+# header
+header_text <- md(glue(
+  brand_img,
+  "Mock homework for class Introduction to Data Science - University of Geneva"
+))
+
+# create plot
+df_usage <- data.frame(minutes = lst_usage[[client_id_i]])
+boxplot_usage <- add_ggplot(ggplot(df_usage, aes(y = minutes)) +
+                              geom_boxplot(color = "black", fill = "grey80") +
+                              theme(
+                                axis.text.x = element_blank(),
+                                plot.title = element_text(size = 10),
+                                plot.margin = unit(c(0, 0, 0, 0), "cm")
+                              ) +
+                              ggtitle("Distribution of minutes per day"),
+                            width = 2.5, height = 2
+)
+
+# young special if born after 93 and higher mean thant 9
+# adult special if born before 93 and higher mean than 15
+
+
+# body text
+
+# propositon
+age_days <- difftime(Sys.Date(), as.Date(df_client[client_id_i, "dob"], format = "%d/%m/%Y"), units = "days")
+age_year <- floor(as.numeric(age_days, units = "days") / 365)
+mean_min_call <- mean(lst_usage[[client_id_i]])
+  
+if (age_year >= 30 && mean_min_call >= 15) {
+    proposition <- "As you are 30 years old or more and have an average of 15 or more minutes of calls per day, we are pleased to offer you the possibility of the adult premium plan."
+  } else if (age_year < 30 && mean_min_call >= 9) {
+    proposition <- "As you are less than 30 years old and have an average of 9 or more minutes of calls per day, we are pleased to offer you the possibility of the younth premium plan."
+  } else if (age_year < 30 && mean_min_call < 9) {
+    proposition <- "As you are less than 30 years old, you could have benefited from a change of subscription if you used your phone more frequently. 
+  Indeed, you can benefit from a youth premium plan as soon as you average at least 9 minutes of calls per day."
+  }
+  
+# student discount
+student_discount <- ifelse(df_client[client_id_i, "student"] == 1,
+                             "Additionaly, given your student status, we propose you a 10% discount on the plan subscription price.", ""
+  )
+  
+# define greeting
+greeting <- ifelse(df_client[client_id_i, "sex"] == "man", "Mr.", "Mrs.")
+  
+  
+body_text <- md(
+    c(
+      "# A special offer for you",
+      glue("Dear  {greeting}{df_client[client_id_i, 4 ]} {df_client[client_id_i, 5 ]},"),
+      "",
+      glue("We are very happy to count you among our customers since the   {df_client[client_id_i, 7 ]}."),
+      "",
+      glue("We analyzed how often you use our services, specifically the number of minutes you spend on the phone per day. 
+         Here is a boxplot showing your usage during your {length(lst_usage[[client_id_i]])} days of use."),
+      
+      boxplot_usage,
+      
+      proposition,
+      "",
+      student_discount
+    ))
+  
+# footer
+date_time <- add_readable_time()
+footer_text <- md(
+    c(
+      "Email sent on ", date_time, "."
+    )
+  )
+  
+# Include the button in the email
+# message body by using it as part of
+# a vector inside of `md()`
+email <- compose_email(
+    
+      header = header_text,
+      
+      body = blocks(
+        block_text(body_text),
+        block_spacer(),
+        block_text(cta_button)
+      ),
+      footer = blocks(
+        block_text(footer_text),
+        block_spacer(),
+        block_social_links(
+          social_link(
+            service = "github",
+            link = "https://github.com/SMAC-Group/course_intro_ds",
+            variant = "color"
+          )
+        )
+      )
+    )
+  
+# Preview email  
+email
+  
+
+```
+
+```{r, echo = F}
+htmltools::tags$iframe(src = "example_lionel.html", width = "100%", height ="500px")
+```
+
+
+### Store SMTP credentials in the system's key-value store
+
+```{r, eval = F}
+create identification smtp protocol
+create_smtp_creds_key(
+  id = "introds_gmail",
+  user = "happydatasciencewithr@gmail.com",
+  provider = "gmail", overwrite = T
+)
+
+```
+  
+```{r, eval = T}
+# extract email adress
+email_adress_client <- as.character(df_client[client_id_i, "email_adress"])
+
+# check email
+email_adress_client
+```
+ 
+### Send email
+
+```{r, eval =F}
+# send email
+email %>%
+    smtp_send(
+      from =  "happydatasciencewithr@gmail.com",
+      to = email_adress_client,
+      subject = "A personalised offer from Salt",
+      credentials = creds_key(id = "introds_gmail")
+    )
+```
+
